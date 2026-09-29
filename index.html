@@ -1,104 +1,32 @@
 <!doctype html>
 <html lang="de">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#f4e7c5">
-  <title>Mensch ärgere Dich nicht – Online</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mensch ärgere Dich nicht – Online</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="topbar">
-    <div>
-      <h1>Mensch ärgere Dich nicht</h1>
-      <p>Online mit bis zu 6 Freunden</p>
-    </div>
-    <div class="connection" id="connectionStatus">Nicht verbunden</div>
-  </header>
-
-  <main class="app">
-    <section class="panel lobby" id="lobbyPanel">
-      <div class="card">
-        <h2>Neues Spiel</h2>
-        <p>Du wirst automatisch zum Spielleiter. Teile den Raumcode mit deinen Freunden.</p>
-        <button id="createRoomBtn" class="primary">Raum erstellen</button>
-        <div id="hostRoomBox" class="room-box hidden">
-          <span>Raumcode</span>
-          <strong id="hostRoomCode">—</strong>
-          <button id="copyRoomBtn" class="small">Code kopieren</button>
-          <p class="hint">Deine Freunde wählen „Beitreten“ und geben diesen Code ein.</p>
-        </div>
-      </div>
-
-      <div class="card">
-        <h2>Spiel beitreten</h2>
-        <p>Gib den Raumcode des Spielleiters ein.</p>
-        <div class="join-row">
-          <input id="roomCodeInput" maxlength="6" placeholder="z. B. 7K4M2P" autocomplete="off">
-          <button id="joinRoomBtn" class="secondary">Beitreten</button>
-        </div>
-      </div>
-
-      <div class="card rules">
-        <h2>Kurz erklärt</h2>
-        <ul>
-          <li>2 bis 6 Spieler können in einem Raum spielen.</li>
-          <li>Bei einer 6 darfst du noch einmal würfeln.</li>
-          <li>Eine Figur kommt mit einer 6 aus dem Haus.</li>
-          <li>Eigene Figuren können ein Feld teilen; fremde Figuren werden geschlagen.</li>
-          <li>Wer zuerst alle vier Figuren im Ziel hat, gewinnt.</li>
-        </ul>
-      </div>
-    </section>
-
-    <section class="panel game hidden" id="gamePanel">
-      <aside class="sidebar">
-        <div class="card">
-          <div class="room-line">
-            <span>Raum</span><strong id="roomCodeLabel">—</strong>
-          </div>
-          <div class="players" id="playersList"></div>
-        </div>
-
-        <div class="card turn-card">
-          <div class="turn-label">Am Zug</div>
-          <div id="turnPlayer" class="turn-player">—</div>
-          <div id="diceFace" class="dice" aria-label="Würfel">⚀</div>
-          <button id="rollBtn" class="primary" disabled>Würfeln</button>
-          <p id="actionHint" class="hint">Warte auf den Spielleiter.</p>
-        </div>
-
-        <div class="card host-controls hidden" id="hostControls">
-          <h3>Spielleiter</h3>
-          <button id="startBtn" class="primary">Spiel starten</button>
-          <button id="resetBtn" class="danger">Spiel zurücksetzen</button>
-        </div>
-
-        <div class="card log-card">
-          <h3>Spielverlauf</h3>
-          <div id="gameLog" class="log"></div>
-        </div>
-      </aside>
-
-      <section class="board-wrap">
-        <div class="board" id="board" aria-label="Spielbrett"></div>
-        <div class="winner hidden" id="winnerOverlay">
-          <div class="winner-box">
-            <div class="winner-crown">♛</div>
-            <h2 id="winnerText">Gewonnen!</h2>
-            <button id="closeWinnerBtn" class="secondary">Weiter</button>
-          </div>
-        </div>
-      </section>
-    </section>
-  </main>
-
-  <footer>
-    <span>Private Spielrunde · Kein Konto erforderlich</span>
-    <span>Hinweis: Das Brett ist im klassischen Stil gestaltet und enthält keine offiziellen Logos.</span>
-  </footer>
-
-  <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-  <script src="app.js"></script>
-</body>
-</html>
+<div class="app">
+<header><div><h1>Mensch ärgere Dich nicht</h1><p class="subtitle">Online mit bis zu 6 Spielern · klassische 6er-Anordnung</p></div><div id="connection" class="pill">Offline</div></header>
+<main>
+<section id="lobby" class="panel">
+  <div class="hero"><h2>Online-Spiel erstellen oder beitreten</h2><p>Jeder Spieler wählt selbst eine freie Farbe. Der Startspieler wird zufällig ausgelost.</p></div>
+  <div class="lobby-grid">
+    <div class="card"><h3>Spiel erstellen</h3><label>Dein Name<input id="hostName" maxlength="18" placeholder="z. B. Alex"></label><button id="createBtn">Spiel erstellen</button><p id="roomCode" class="code"></p></div>
+    <div class="card"><h3>Spiel beitreten</h3><label>Dein Name<input id="joinName" maxlength="18" placeholder="z. B. Sam"></label><label>Raumcode<input id="joinCode" maxlength="8" placeholder="ABC123"></label><button id="joinBtn" class="secondary">Beitreten</button></div>
+  </div>
+  <div id="colorPicker" class="card hidden"><h3>Farbe wählen</h3><div id="colors" class="colors"></div><p id="pickHint">Wähle eine freie Farbe.</p></div>
+  <div id="waiting" class="card hidden"><h3>Spieler</h3><div id="playersList"></div><button id="startBtn">Spiel starten</button></div>
+</section>
+<section id="game" class="hidden">
+  <div class="game-layout">
+    <aside class="side panel"><h2>Spieler</h2><div id="scoreboard"></div><div class="turnbox"><div>Am Zug</div><strong id="turnName">–</strong><span id="turnColor">–</span></div><button id="rollBtn" class="roll">Würfeln</button><div id="die" class="die">–</div><div id="status" class="status"></div><button id="newGameBtn" class="secondary">Neues Spiel</button></aside>
+    <section class="board-wrap"><div id="board" class="board" aria-label="Spielbrett"></div><div class="legend"><span>Weiße Felder = Laufbahn</span><span>A = Start</span><span>B = Haus</span><span>a–d = Ziel</span></div></section>
+  </div>
+</section>
+</main>
+<footer>Die Spielfeldgrafik ist geometrisch an die klassische 6-Spieler-Spielplanform mit kleiner 48-Felder-Runde angelehnt. Spielname und Markenrechte liegen bei den jeweiligen Rechteinhabern.</footer>
+</div>
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script src="app.js"></script>
+</body></html>
