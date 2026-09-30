@@ -39,17 +39,6 @@
     </header>
 
     <div class="game-layout">
-      <div class="board-area">
-        <img id="board" src="board-template.svg" alt="Spielfeld nach der bereitgestellten Vorlage">
-        <div id="tokenLayer" aria-label="Spielfiguren"></div>
-        <section class="dice-panel" aria-label="Würfel">
-          <div class="dice-caption">Würfel</div>
-          <div id="die" class="die">–</div>
-          <div id="diceText" class="dice-text">Lobby – warte auf den Start.</div>
-          <button id="roll" class="primary roll" disabled>Würfeln</button>
-        </section>
-      </div>
-
       <aside class="players-panel">
         <div class="players-head"><h2>Spieler</h2><span id="count">0/6</span></div>
         <div id="players"></div>
@@ -58,6 +47,19 @@
         <p id="lobbyHint" class="hint">Weitere Spieler können beitreten.</p>
         <p id="gameMsg" class="game-msg" aria-live="polite"></p>
       </aside>
+
+      <div class="board-section">
+        <section class="dice-panel" aria-label="Würfel">
+          <div class="dice-caption">Würfel</div>
+          <div id="die" class="die">–</div>
+          <div id="diceText" class="dice-text">Lobby – warte auf den Start.</div>
+          <button id="roll" class="primary roll" disabled>Würfeln</button>
+        </section>
+        <div class="board-area">
+          <img id="board" src="board-template.svg" alt="Spielfeld nach der bereitgestellten Vorlage">
+          <div id="tokenLayer" aria-label="Spielfiguren"></div>
+        </div>
+      </div>
     </div>
   </section>
 </main>
