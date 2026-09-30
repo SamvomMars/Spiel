@@ -1,11 +1,19 @@
 # Mensch ärgere Dich nicht – Online
 
-Statische GitHub-Pages-App für 2–6 Spieler. PeerJS Cloud übernimmt die Signalisierung; die Spielzustände werden per WebRTC zwischen den Browsern übertragen.
+GitHub-Pages-fähige statische Version für 2–6 Spieler.
 
-## GitHub Pages
-1. Alle Dateien ins Repository-Root laden.
-2. Settings → Pages → Deploy from a branch → `main` / `/ (root)`.
-3. Die erzeugte HTTPS-Seite öffnen.
+## Ablauf
+- Raum erstellen oder beitreten
+- Farbe wählen
+- Sofort wird die Brett-Lobby angezeigt
+- Ab 2 Spielern kann der Gastgeber **Spiel starten** drücken
+- Der Startspieler wird zufällig bestimmt
+- Der Würfelstand wird als Teil des synchronisierten Spielzustands an alle Spieler übertragen
 
-## Wichtig
-Der Raumcode ist nicht direkt die Peer-ID: intern wird daraus `maedn-<code>` gebildet. Dadurch stimmen sichtbarer Raumcode und PeerJS-Verbindungsadresse zuverlässig überein. PeerJS benötigt einen Signaling-Server; standardmäßig kann PeerJS Cloud verwendet werden.
+## Brett
+Die Brettgeometrie orientiert sich an der klassischen 6-Personen-Anordnung mit sechs farbigen Häusern, A-Startfeldern, weißer Laufbahn und vier Zielfeldern a–d. Schmidt beschreibt diese Elemente ausdrücklich; die 6-Personen-Ausgabe wird als Variante des Originals geführt.
+
+Quellen:
+- https://www.schmidtspiele.de/details/produkt/standardausgabe.html
+- https://www.schmidtspiele.de/files/Retail/72dpi_PNG/49439-MaDn-ClassicLine-Metall.pdf
+- https://alte-brettspiele.jimdofree.com/musem-der-%C3%A4rger-spiele/fakten-rund-um-mensch-aergere-dich-nicht/
