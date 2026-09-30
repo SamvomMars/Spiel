@@ -9,7 +9,7 @@ const COLORS={
 };
 const TRACK=[[842,222],[842,314],[842,406],[922,452],[1002,498],[1082,452],[1162,406],[1208,486],[1254,566],[1174,612],[1094,658],[1094,750],[1094,842],[1174,888],[1254,934],[1208,1014],[1162,1094],[1082,1048],[1002,1002],[922,1048],[842,1094],[842,1186],[842,1278],[750,1278],[658,1278],[658,1186],[658,1094],[578,1048],[498,1002],[418,1048],[338,1094],[292,1014],[246,934],[326,888],[406,842],[406,750],[406,658],[326,612],[246,566],[292,486],[338,406],[418,452],[498,498],[578,452],[658,406],[658,314],[658,222],[750,222]];
 const KEYS=Object.keys(COLORS), $=id=>document.getElementById(id);
-const S={room:null,host:false,peer:null,conn:null,myId:null,connections:[],players:[],phase:'lobby',turn:0,dice:null,diceOwner:null,pawns:{},opening:{order:[],index:0,results:{}},houseRolls:0};
+const S={room:null,host:false,peer:null,conn:null,myId:null,connections:[],players:[],phase:'lobby',turn:0,dice:null,diceOwner:null,pawns:{},opening:{order:[],index:0,results:{}}};
 const colorChoices=$('colorChoices');
 KEYS.forEach(k=>{const b=document.createElement('button');b.type='button';b.className='color-choice';b.dataset.color=k;const dot=document.createElement('span');dot.className='color-dot'+(k==='black'?' black':'');dot.style.background=COLORS[k].hex;const label=document.createElement('span');label.textContent=COLORS[k].name;b.append(dot,label);b.onclick=()=>selectColor(k);colorChoices.append(b)});
 function selectColor(k){if(!COLORS[k])return;$('color').value=k;colorChoices.querySelectorAll('.color-choice').forEach(b=>b.classList.toggle('selected',b.dataset.color===k));if(!S.myId)return;if(S.host){const p=me();if(p&&S.phase==='lobby'&&colorFree(k,p.id)){p.color=k;S.pawns[p.id]=basePawns();broadcast()}}else send(S.conn,{type:'color',id:S.myId,color:k})}
@@ -22,8 +22,8 @@ function colorFree(k,except){return !S.players.some(p=>p.color===k&&p.id!==excep
 function me(){return S.players.find(p=>p.id===S.myId)}
 function basePawns(){return [-1,-1,-1,-1]}
 function createPlayer(id,name,color,host=false){return{id,name:String(name||'Spieler').trim().slice(0,18)||'Spieler',color,host}}
-function snapshot(){return{room:S.room,players:S.players,phase:S.phase,turn:S.turn,dice:S.dice,diceOwner:S.diceOwner,pawns:S.pawns,opening:S.opening,houseRolls:S._houseRolls||0}}
-function apply(s){S.room=s.room;S.players=s.players||[];S.phase=s.phase||'lobby';S.turn=Number.isInteger(s.turn)?s.turn:0;S.dice=s.dice==null?null:Number(s.dice);S.diceOwner=s.diceOwner||null;S.pawns=s.pawns||{};S.opening=s.opening||{order:[],index:0,results:{}};S._houseRolls=Number.isInteger(s.houseRolls)?s.houseRolls:0;showGame();render()}
+function snapshot(){return{room:S.room,players:S.players,phase:S.phase,turn:S.turn,dice:S.dice,diceOwner:S.diceOwner,pawns:S.pawns,opening:S.opening}}
+function apply(s){S.room=s.room;S.players=s.players||[];S.phase=s.phase||'lobby';S.turn=Number.isInteger(s.turn)?s.turn:0;S.dice=s.dice==null?null:Number(s.dice);S.diceOwner=s.diceOwner||null;S.pawns=s.pawns||{};S.opening=s.opening||{order:[],index:0,results:{}};showGame();render()}
 function send(c,m){if(c&&c.open)c.send(JSON.stringify(m))}
 function broadcast(){if(!S.host)return;const m={type:'state',state:snapshot()};S.connections.forEach(c=>send(c,m));render()}
 function initPeer(id,done){if(typeof Peer==='undefined'){setupMsg('PeerJS konnte nicht geladen werden.');return}S.peer=new Peer(id);S.peer.on('open',pid=>{S.myId=pid;done()});S.peer.on('error',e=>{console.error(e);setupMsg(e.type==='peer-unavailable'?'Raum nicht gefunden oder Gastgeber nicht erreichbar.':'Verbindungsfehler: '+e.type);$('netLabel').textContent='Fehler'});S.peer.on('disconnected',()=>{$('netLabel').textContent='Getrennt'})}
