@@ -24,3 +24,11 @@ assert.equal(canLand(players[0],2,2),false);
 const state={dice:2,lastDice:2}; state.dice=null; assert.equal(state.lastDice,2);
 state.dice=6; state.lastDice=6; state.dice=null; assert.equal(state.lastDice,6);
 console.log('ALL LOGIC TESTS PASSED');
+
+function needsHouseRollsState(arr){return arr.some(x=>x===-1)&&!arr.some(x=>x>=0&&x<48)}
+assert.equal(needsHouseRollsState([48,-1,-1,-1]),true);   // one in goal, three in house
+assert.equal(needsHouseRollsState([49,50,-1,-1]),true);   // two in goal, two in house
+assert.equal(needsHouseRollsState([48,10,-1,-1]),false);  // one in goal, one still on track
+assert.equal(needsHouseRollsState([48,49,50,51]),false);   // all four finished
+assert.equal(needsHouseRollsState([-1,-1,-1,-1]),true);   // all four in house
+console.log('HOUSE RETRY TESTS PASSED');
