@@ -1,19 +1,21 @@
 # Mensch ärgere Dich nicht – Online
 
-GitHub-Pages-fähige statische Version für 2–6 Spieler.
+Statische GitHub-Pages-Version für 2–6 Spieler.
 
-## Ablauf
-- Raum erstellen oder beitreten
-- Farbe wählen
-- Sofort wird die Brett-Lobby angezeigt
-- Ab 2 Spielern kann der Gastgeber **Spiel starten** drücken
-- Der Startspieler wird zufällig bestimmt
-- Der Würfelstand wird als Teil des synchronisierten Spielzustands an alle Spieler übertragen
+## Start
+1. Dateien in ein GitHub-Repository laden.
+2. GitHub → Settings → Pages → Deploy from branch → `main` / `/ (root)`.
+3. Die Seite öffnen.
 
-## Brett
-Die Brettgeometrie orientiert sich an der klassischen 6-Personen-Anordnung mit sechs farbigen Häusern, A-Startfeldern, weißer Laufbahn und vier Zielfeldern a–d. Schmidt beschreibt diese Elemente ausdrücklich; die 6-Personen-Ausgabe wird als Variante des Originals geführt.
+## Online-Spiel
+- Ein Spieler erstellt einen Raum.
+- Der Raumcode wird an die anderen Spieler weitergegeben.
+- Nach dem Beitritt erscheint das Brett sofort.
+- Ab 2 Spielern wird beim Host „Spiel starten“ aktiv.
+- Der Startspieler wird zufällig bestimmt.
+- Würfelwürfe werden als gemeinsamer Spielzustand an alle verbundenen Spieler übertragen.
 
-Quellen:
-- https://www.schmidtspiele.de/details/produkt/standardausgabe.html
-- https://www.schmidtspiele.de/files/Retail/72dpi_PNG/49439-MaDn-ClassicLine-Metall.pdf
-- https://alte-brettspiele.jimdofree.com/musem-der-%C3%A4rger-spiele/fakten-rund-um-mensch-aergere-dich-nicht/
+## Vorlage
+`board-template.svg` ist die vom Nutzer bereitgestellte SVG-Vorlage und wird unverändert als sichtbares Brett verwendet. Die Spielfiguren werden darüber gelegt.
+
+Hinweis: Die PeerJS-Verbindung benötigt eine funktionierende Internetverbindung und kann je nach Netzwerk/NAT eingeschränkt sein.
