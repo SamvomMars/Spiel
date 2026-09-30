@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#171717">
+<meta name="theme-color" content="#e8d8b8">
 <title>Mensch ärgere Dich nicht – Online</title>
 <link rel="stylesheet" href="style.css">
 </head>
@@ -14,7 +14,11 @@
     <p>Online mit 2–6 Spielern · klassische 6-Spieler-Vorlage</p>
     <div class="setup-grid">
       <label>Name<input id="name" maxlength="18" autocomplete="nickname" placeholder="Dein Name"></label>
-      <label>Farbe<select id="color"></select></label>
+      <fieldset class="color-picker">
+        <legend>Spielerfarbe</legend>
+        <div id="colorChoices" class="color-choices"></div>
+        <input id="color" type="hidden" value="red">
+      </fieldset>
     </div>
     <div class="join-grid">
       <button id="create" class="primary">Raum erstellen</button>
@@ -23,6 +27,9 @@
       <button id="join">Beitreten</button>
     </div>
     <p id="setupMsg" class="status" aria-live="polite"></p>
+    <div class="setup-board-preview">
+      <img src="board-template.svg" alt="Spielbrett nach deiner bereitgestellten Vorlage">
+    </div>
   </section>
 
   <section id="game" class="hidden">
