@@ -19,3 +19,8 @@ GitHub-Pages-fähige 2–6-Spieler-Version mit PeerJS.
 ## Technik
 - Das Spielbrett `board-template.svg` stammt unverändert aus der bereitgestellten Vorlage.
 - PeerJS dient für die direkte Synchronisierung zwischen Gastgeber und Mitspielern.
+
+## Letzte Korrektur
+- Die zuletzt gewürfelte Zahl bleibt im Würfelfeld sichtbar, auch nachdem der aktive Würfel gelöscht bzw. der Zug gewechselt wurde.
+- Der Zieleinlauf verwendet weiterhin exakte Vorwärtsdistanz; belegte Zielfelder dürfen auf dem Weg übersprungen werden, aber das tatsächliche Zielfeld muss frei sein.
+- HTML/CSS/Layout und die verwendete Board-SVG wurden nicht verändert.
