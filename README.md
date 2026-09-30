@@ -1,21 +1,20 @@
 # Mensch ärgere Dich nicht – Online
 
-Statische GitHub-Pages-Version für 2–6 Spieler.
-
-## Start
-1. Dateien in ein GitHub-Repository laden.
-2. GitHub → Settings → Pages → Deploy from branch → `main` / `/ (root)`.
-3. Die Seite öffnen.
-
-## Online-Spiel
-- Ein Spieler erstellt einen Raum.
-- Der Raumcode wird an die anderen Spieler weitergegeben.
-- Nach dem Beitritt erscheint das Brett sofort.
-- Ab 2 Spielern wird beim Host „Spiel starten“ aktiv.
-- Der Startspieler wird zufällig bestimmt.
-- Würfelwürfe werden als gemeinsamer Spielzustand an alle verbundenen Spieler übertragen.
+GitHub-Pages-taugliche 2–6-Spieler-Version.
 
 ## Vorlage
-`board-template.svg` ist die vom Nutzer bereitgestellte SVG-Vorlage und wird unverändert als sichtbares Brett verwendet. Die Spielfiguren werden darüber gelegt.
+`board-template.svg` ist die vom Nutzer bereitgestellte SVG-Vorlage und wird als sichtbares Brett verwendet. Die A-/B-/Zielfelder und die Laufbahn kommen damit aus derselben Vorlage statt aus einer frei erfundenen CSS-Geometrie.
 
-Hinweis: Die PeerJS-Verbindung benötigt eine funktionierende Internetverbindung und kann je nach Netzwerk/NAT eingeschränkt sein.
+## Ablauf
+- Name + Farbe wählen.
+- Raum erstellen oder per Code beitreten.
+- Das Brett wird sofort angezeigt.
+- Der Host sieht die Spielerliste und kann ab 2 Spielern `Spiel starten` drücken.
+- Weitere Spieler können bis zum Start beitreten.
+- `Neues Spiel` befindet sich beim Host direkt in der Spielerliste und setzt die Partie zurück, ohne den Raum zu schließen.
+
+## Regeln
+Die Implementierung folgt den dokumentierten Standardregeln für Laufbahn, A-Feld, B-Felder, Ziele, Schlagen, eigene Figuren, Sechsen und Zielbereich. Zusätzlich ist die vom Auftrag gewünschte 3-Wurf-Regel umgesetzt: Wenn alle eigenen Figuren wieder auf den B-Feldern stehen, gibt es bis zu drei Würfe, um eine 6 zu bekommen.
+
+## Online
+Die Verbindung erfolgt über PeerJS. GitHub Pages bleibt statisch; PeerJS übernimmt die Signalisierung. Eine funktionierende Internetverbindung ist erforderlich.
