@@ -41,8 +41,8 @@ function createRoom(){const name=$('name').value.trim();if(!name){setupMsg('Bitt
 function startGame(){if(!S.host||S.phase!=='lobby'||S.players.length<2)return;S.phase='opening';S.dice=null;S.diceOwner=null;S.turn=0;S._houseRolls=0;S.opening={order:S.players.map(p=>p.id),index:0,results:{}};S.players.forEach(p=>S.pawns[p.id]=basePawns());gameMsg('Startwurf: Die niedrigste Zahl beginnt. Jede Person würfelt einmal.');broadcast()}
 function newGame(){if(!S.host)return;S.phase='lobby';S.dice=null;S.diceOwner=null;S.turn=0;S._houseRolls=0;S.opening={order:[],index:0,results:{}};S.players.forEach(p=>S.pawns[p.id]=basePawns());broadcast();gameMsg('Neues Spiel: weitere Spieler können beitreten.')}
 function die(){return 1+Math.floor(Math.random()*6)}
-function distance(color,pos){return(pos-COLORS[color].start+48)%48}
-function target(color,pos,r){if(pos===-1)return r===6?COLORS[color].start:null;if(pos>=48){const g=pos-48;return g+r<=3?48+g+r:null}const d=distance(color,pos),nd=d+r;return nd<=47?(COLORS[color].start+nd)%48:(nd<=51?48+nd-48:null)}
+function progress(color,pos){if(pos===-1)return null;if(pos>=48)return pos;if(pos>=0&&pos<48)return (pos-COLORS[color].start+48)%48;return null}
+function target(color,pos,r){if(!Number.isInteger(r)||r<1||r>6)return null;if(pos===-1)return r===6?COLORS[color].start:null;const pr=progress(color,pos);if(pr===null)return null;const np=pr+r;if(np>51)return null;return np<48?(COLORS[color].start+np)%48:np}
 function hasTrackPiece(id){return(S.pawns[id]||basePawns()).some(x=>x>=0&&x<48)}
 function allHome(id){return(S.pawns[id]||basePawns()).every(x=>x===-1)}
 function occupied(pos,exceptId,exceptPawn){const a=[];for(const p of S.players)for(let i=0;i<4;i++){if(p.id===exceptId&&i===exceptPawn)continue;const q=(S.pawns[p.id]||[])[i];if(q===pos)a.push({p,i})}return a}
