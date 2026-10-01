@@ -74,7 +74,7 @@ function target(color,pos,r){
 function hasTrackPiece(id){return(S.pawns[id]||basePawns()).some(x=>x>=0&&x<48)}
 function allHome(id){return(S.pawns[id]||basePawns()).every(x=>x===-1)}
 function needsHouseRolls(id){const arr=S.pawns[id]||basePawns();return arr.some(x=>x===-1)&&!arr.some(x=>x>=0&&x<48)}
-function occupied(pos,exceptId,exceptPawn){const a=[];for(const p of S.players)for(let i=0;i<4;i++){if(p.id===exceptId&&i===exceptPawn)continue;const q=(S.pawns[p.id]||[])[i];if(q===pos)a.push({p,i})}return a}
+function occupied(pos,exceptId,exceptPawn){const a=[];const owner=S.players.find(x=>x.id===exceptId);for(const p of S.players)for(let i=0;i<4;i++){if(p.id===exceptId&&i===exceptPawn)continue;const q=(S.pawns[p.id]||[])[i];if(q!==pos)continue;/* Goal positions 48..51 are private lanes: the same numeric goal slot exists once per color. */if(pos>=48&&owner&&p.color!==owner.color)continue;a.push({p,i})}return a}
 function canLand(p,i,r){
   const arr=S.pawns[p.id]||basePawns();
   const from=arr[i];
