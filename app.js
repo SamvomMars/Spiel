@@ -87,7 +87,29 @@ function canLand(p,i,r){
   // On the track, own figures cannot be stacked; opponents may be captured on landing.
   return !blockers.some(o=>o.p.id===p.id);
 }
-function legal(id,r){const p=S.players.find(x=>x.id===id);if(!p)return[];const arr=S.pawns[id]||basePawns();const home=arr.map((x,i)=>x===-1?i:null).filter(x=>x!==null);if(r===6&&home.length){const start=COLORS[p.color].start;const onStart=arr.findIndex(x=>x===start);if(onStart>=0)return canLand(p,onStart,r)?[onStart]:[];return home.filter(i=>canLand(p,i,r))}return arr.map((x,i)=>x===-1?null:(canLand(p,i,r)?i:null)).filter(x=>x!==null)}
+function legal(id,r){
+  const p=S.players.find(x=>x.id===id);if(!p)return[];
+  const arr=S.pawns[id]||basePawns();
+  const home=arr.map((x,i)=>x===-1?i:null).filter(x=>x!==null);
+  const start=COLORS[p.color].start;
+  const onStart=arr.findIndex(x=>x===start);
+
+  // A 6 must first bring a waiting home piece onto A while any B pieces remain.
+  // If A is already occupied and there are still other home pieces waiting,
+  // that A-piece has to be moved with the 6. This applies identically to ALL colors.
+  // Exception requested for this game: if the piece being brought out is the LAST
+  // piece in the house, it may remain on A; the player is not forced to clear A
+  // immediately just because the 6 was used to bring that last home piece out.
+  if(r===6&&home.length){
+    if(onStart>=0 && home.length>1){
+      return canLand(p,onStart,r)?[onStart]:[];
+    }
+    // If A is free, or this is the last home piece, the home piece itself is the
+    // mandatory 6-move. Other pieces may not be selected instead.
+    return home.filter(i=>canLand(p,i,r));
+  }
+  return arr.map((x,i)=>x===-1?null:(canLand(p,i,r)?i:null)).filter(x=>x!==null)
+}
 function currentRollerId(){if(S.phase==='opening')return S.opening.order[S.opening.index]||null;if(S.phase==='playing')return S.players[S.turn]?.id||null;return null}
 function openingRoll(id){if(S.phase!=='opening'||id!==currentRollerId())return;const r=die();S.opening.results[id]=r;S.dice=r;S.lastDice=r;S.diceOwner=id;S.opening.index++;if(S.opening.index<S.opening.order.length){broadcast();return}const vals=S.opening.order.map(pid=>S.opening.results[pid]);const min=Math.min(...vals);const tied=S.opening.order.filter(pid=>S.opening.results[pid]===min);if(tied.length>1){S.opening.order=tied;S.opening.index=0;S.opening.results={};S.dice=null;S.diceOwner=null;gameMsg('Gleichstand bei der niedrigsten Zahl – nur diese Spieler würfeln erneut.');broadcast();return}S.turn=S.players.findIndex(p=>p.id===tied[0]);S.phase='playing';S.dice=null;S.diceOwner=null;gameMsg((S.players[S.turn]?.name||'Spieler')+' beginnt. Zum Herauskommen ist eine 6 nötig.');broadcast()}
 function roll(id){if(S.phase==='opening'){openingRoll(id);return}if(S.phase!=='playing'||id!==S.players[S.turn]?.id)return;const p=S.players[S.turn];const houseRetry=needsHouseRolls(p.id)&&S.dice!==null&&S.diceOwner===p.id&&S._houseRolls>0;if(S.dice!==null&&!houseRetry)return;const r=die();S.dice=r;S.lastDice=r;S.diceOwner=p.id;const moves=legal(p.id,r);if(moves.length===0){const canTryAgain=needsHouseRolls(p.id)&&r!==6;if(canTryAgain){S._houseRolls=(S._houseRolls||0)+1;if(S._houseRolls<3){gameMsg(p.name+' hat eine '+r+' gewürfelt – keine 6. Noch '+(3-S._houseRolls)+' Versuch'+(3-S._houseRolls===1?'':'e')+'.');broadcast();return}S.dice=null;S.diceOwner=null;S._houseRolls=0;nextTurn();gameMsg(p.name+' hat '+r+' gewürfelt. Keine 6 in drei Versuchen – '+(S.players[S.turn]?.name||'Der nächste Spieler')+' ist am Zug.');broadcast();return}S.dice=null;S.diceOwner=null;S._houseRolls=0;nextTurn();gameMsg(p.name+' kann mit dieser Zahl nicht ziehen.');broadcast();return}S._houseRolls=0;broadcast()}
