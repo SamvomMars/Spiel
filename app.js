@@ -1,6 +1,6 @@
 (()=>{'use strict';
 const COLORS={
- red:{name:'Rot',hex:'#ef1111',start:0,home:[[1280,110],[1280,220],[1390,110],[1390,220]],goal:[[750,554],[750,474],[750,394],[750,314]]},
+ red:{name:'Rot',hex:'#ef1111',start:0,home:[[1280,110],[1280,220],[1390,110],[1390,220]],goal:[[750,314],[750,394],[750,474],[750,554]]},
  green:{name:'Grün',hex:'#009b00',start:8,home:[[1280,695],[1280,805],[1390,695],[1390,805]],goal:[[1128,532],[1059,572],[990,612],[921,652]]},
  purple:{name:'Lila',hex:'#b000b0',start:16,home:[[1280,1280],[1280,1390],[1390,1280],[1390,1390]],goal:[[1128,968],[1059,928],[990,888],[921,848]]},
  yellow:{name:'Gelb',hex:'#f2e900',start:24,home:[[220,1280],[220,1390],[110,1280],[110,1390]],goal:[[750,1186],[750,1106],[750,1026],[750,946]]},
@@ -45,23 +45,31 @@ function die(){return 1+Math.floor(Math.random()*6)}
 // progress() returns the exact number of steps already travelled from that player's A/start field.
 function progress(color,pos){
   if(pos===-1)return null;
+  // Goal positions are already stored as their absolute logical distance: 48..51.
   if(Number.isInteger(pos)&&pos>=48&&pos<=51)return pos;
-  if(Number.isInteger(pos)&&pos>=0&&pos<48)return (pos-COLORS[color].start+48)%48;
+  if(Number.isInteger(pos)&&pos>=0&&pos<48){
+    const start=COLORS[color]?.start;
+    if(!Number.isInteger(start))return null;
+    return (pos-start+48)%48;
+  }
   return null;
 }
 
-// Returns the exact landing position for a forward move, or null when the roll cannot be used.
-// Goal fields are 48..51. A move may pass occupied goal fields; only the actual landing field
-// must be free. A roll must fit exactly: no move may go beyond goal field 4 (51).
+// Returns the exact landing position for a forward move.
+// Logical positions are: 0..47 = track, 48..51 = goal 1..4.
+// A move may pass occupied goal fields; only its actual landing field is checked later.
 function target(color,pos,r){
-  if(!Number.isInteger(r)||r<1||r>6)return null;
+  if(!COLORS[color]||!Number.isInteger(r)||r<1||r>6)return null;
   if(pos===-1)return r===6?COLORS[color].start:null;
   const pr=progress(color,pos);
   if(pr===null)return null;
   const np=pr+r;
+  // There are exactly four goal fields. No move may go beyond goal 4.
   if(np>51)return null;
+  // Still on the common 48-field track.
   if(np<48)return (COLORS[color].start+np)%48;
-  return np;
+  // Enter/advance through the private goal lane.
+  return 48+(np-48);
 }
 function hasTrackPiece(id){return(S.pawns[id]||basePawns()).some(x=>x>=0&&x<48)}
 function allHome(id){return(S.pawns[id]||basePawns()).every(x=>x===-1)}
